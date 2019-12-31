@@ -160,3 +160,42 @@ override fun onTouchEvent(event: MotionEvent): Boolean {
 This code first retrieves the ```x``` and ```y``` coordinates of the user's touch. Then, depending on whether the user put down their finger/cursor (```ACTION_DOWN```), moved their finger/cursor (```ACTION_MOVE```), or taken up their finger/cursor (```ACTION_UP```), a different function (which we will proceed to define) will be called.
 
 The ```touchStart()``` function should start drawing, the ```touchUp()``` function should stop drawing, and the ```touchMove()``` function should continue drawing and change it to respond with the user's touch. Let's first define ```touchUp()``` and ```touchStart()```, as those are the easier 2 of the functions.
+
+```kotlin
+private fun touchStart(){
+    path.reset()
+    path.moveTo(newX, newY)
+    currentX = newX
+    currentY = newY
+}
+```
+This code simply resets the path (creates a new path everytime the user touches the screen), moves it to the requested position, and updates the ```currentX``` and ```currentY``` variables.
+
+```kotlin
+private fun touchUp(){
+    path.reset()
+}
+```
+This function just resets the path when the user releases their finger.
+
+Now let's define the function for drawing the path.
+
+```kotlin
+private fun touchMove(){
+    val dx = Math.abs(newX - currentX)
+    val dy = Math.abs(newY - currentY)
+
+    if (dx >= touchTolerance || dy >= touchTolerance){
+        path.quadTo(currentX, currentY, (newX + currentX)/2, (newY + currentY)/2)
+        currentX = newX
+        currentY = newY
+
+        extraCanvas.drawPath(path, paint)
+    }
+
+    invalidate()
+}
+```
+
+First, we calculate the change in x (```dx```) and the change in y (```dy```). Next, we check to see if the distance moved is greater than the ```touchTolerance``` defined in the class (remember, this is the distance at which we differentiate between a scrolling action and drawing action). If so, then we move the path to halfway between the old x and new x (this is so it is trailing a bit behind the user's finger/cursor). We use ```.quadTo()``` to create smooth curves instead of rigid lines. Next, we update our ```currentX``` and ```currentY```, and then we draw this path to the canvas. Finally, we call ```invalidate()```, which forces the view to redraw with the updates.
+```

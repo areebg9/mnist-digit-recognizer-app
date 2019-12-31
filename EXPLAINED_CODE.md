@@ -19,7 +19,7 @@ The steps of production are:
 
 To use a model with Tensorflow Lite and Firebase's MLKit, we need to change our model into a ```.tflite``` format so it can be interpreted by the *interpreter* (an *interpreter* is the interface with which a model is controlled in the app).
 
-A link to a Colab Notebook which contains the training and conversion process can be found [here]().
+A link to a Colab Notebook which contains the training and conversion process can be found [here](https://colab.research.google.com/drive/1hHEfP4nm0vuZL0ae3qRY4wRE5729cpAt).
 
 ## Register Our App with Firebase
 
@@ -79,3 +79,40 @@ val inputOutputOptions = FirebaseModelInputOutputOptions.Builder()
 ## Create the Canvas (Custom View)
 
 Now we will create the canvas. Almost all the code can be found in [this tutorial](https://codelabs.developers.google.com/codelabs/advanced-android-kotlin-training-canvas) about canvases, and [this tutorial](https://codelabs.developers.google.com/codelabs/advanced-andoid-kotlin-training-custom-views) about custom views (as part of the Advanced Android Development in Kotlin Course).
+
+We'll start by creating the class. 
+```kotlin
+class CanvasView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : View(context, attrs, defStyleAttr) {}
+```
+This notation allows us to embed this view within our ```activity_main.xml``` while also giving us the ability to call an object to its class. 
+
+For the sake of brevity, the initializations at the class-level will be skipped (they can still be viewed in [here](main/java/com/example/firebase/CanvasView.kt)) - keep in mind, however, that ```private lateinit var variable: Type``` initializes an empty variable ```variable``` of type ```Type```, to be initialized at a later time.
+
+We'll start by defining our colors. In ```colors.xml``` (found in */res/values*), we have defined a background and foreground color for our canvas. Now let's load them into our code.
+```kotlin
+private val drawColor = ResourcesCompat.getColor(resources, R.color.colorPaint, null)
+private val backgroundColor = ResourcesCompat.getColor(resources, R.color.colorBackground, null)
+```
+Let's also define a constant called ```touchTolerance``` - this constant holds the value at which a touch (with the intent of drawing) will be distinguished from scrolling.
+```kotlin
+private val touchTolerance = ViewConfiguration.get(context).scaledTouchSlop
+```
+Let's define our paint as well. 
+```kotlin
+private val paint = Paint().apply{
+    color = drawColor
+    isAntiAlias = true
+    isDither = true
+    style = Paint.Style.STROKE
+    strokeJoin = Paint.Join.ROUND
+    strokeCap = Paint.Cap.ROUND
+    strokeWidth = STROKE_WIDTH
+}
+```
+We have initialized it with the color, anti-aliasing, dithering (a technique to create the illusion of a certain color), the stroke, and a pre-defined stroke width (set at 60f). 
+
+

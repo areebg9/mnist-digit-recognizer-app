@@ -1,4 +1,4 @@
-# Overview
+# mnist-digit-recognizer
 
 This document will help explain all the code within this repository. This repository contains all files within *.../app/src/main* inside of an Android project - the Gradle files and files in higher directories have been omitted.
 

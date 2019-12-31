@@ -217,3 +217,16 @@ Next, we need to scale this bitmap down to a ```28x28``` image.
 ```kotlin
 inputBitmap = Bitmap.createScaledBitmap(inputBitmap, 28, 28, true)
 ```
+Now we need to convert this bitmap into a ```1x28x28x1``` array. To do so, we initialized an ```input``` array at the beginning of the class:
+```kotlin
+private val input = Array(1) {Array(28) {Array(28) { FloatArray(1)} } }
+```
+Running the following code will normalize the pixel values between 0 and 1 (credit to [this link](https://blog.stylingandroid.com/ml-for-android-developers-part-3/) for the method). It combines the red, green, and blue values for the pixel and divides it by 765 (which is 3 * 255, one for each color channel) and subtracts this value from 1.
+```kotlin
+for (x in 0..27){
+    for (y in 0..27){
+        val pixel = inputBitmap.getPixel(x, y)
+        input[0][y][x][0] = 1 - ((Color.red(pixel) + Color.green(pixel) + Color.blue(pixel)) / 765).toFloat()
+    }
+}
+```

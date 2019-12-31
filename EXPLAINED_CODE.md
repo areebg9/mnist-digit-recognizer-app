@@ -116,3 +116,17 @@ private val paint = Paint().apply{
 We have initialized it with the color, anti-aliasing, dithering (a technique to create the illusion of a certain color), the stroke, and a pre-defined stroke width (set at 60f). 
 
 Now let's get into creating our canvas. To create the canvas, we will overlay it with a bitmap - this also allows us to retrieve the pixel values from the bitmap for training in our model.
+
+We'll start by overriding the ```onSizeChanged``` function. This function is called when the size of the view changes - in our case, at the start of the app. The advantage of creating the bitmap here is that the width and height of the view are passed in as parameters.
+```kotlin
+override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {
+    super.onSizeChanged(width, height, oldWidth, oldHeight)
+    
+    if (::extraBitmap.isInitialized) extraBitmap.recycle()
+    
+    extraBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    extraCanvas = Canvas(extraBitmap)
+    extraCanvas.drawColor(backgroundColor)
+}
+```
+First, we override the function and call ```super.onSizeChanged()``` (the default behavior). Then, we go on to create our bitmap given the width and height (```Bitmap.Config.ARGB_8888``` is the [recommended option](https://developer.android.com/reference/android/graphics/Bitmap.Config#ARGB_8888) for this parameter, as each pixel is stored on 4 bytes). We create the canvas with this bitmap, and also initialize its color to be the background color we defined in the class. The line ```if (::extraBitmap.isInitialized) extraBitmap.recycle()``` recycles any extra bitmaps left over - the reason for this is that incase we decide to change, it does not take up unwanted memory.

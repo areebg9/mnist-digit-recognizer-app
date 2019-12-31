@@ -197,5 +197,23 @@ private fun touchMove(){
 }
 ```
 
-First, we calculate the change in x (```dx```) and the change in y (```dy```). Next, we check to see if the distance moved is greater than the ```touchTolerance``` defined in the class (remember, this is the distance at which we differentiate between a scrolling action and drawing action). If so, then we move the path to halfway between the old x and new x (this is so it is trailing a bit behind the user's finger/cursor). We use ```.quadTo()``` to create smooth curves instead of rigid lines. Next, we update our ```currentX``` and ```currentY```, and then we draw this path to the canvas. Finally, we call ```invalidate()```, which forces the view to redraw with the updates.
+First, we calculate the change in *x* (```dx```) and the change in *y* (```dy```). Next, we check to see if the distance moved is greater than the ```touchTolerance``` defined in the class (remember, this is the distance at which we differentiate between a scrolling action and drawing action). If so, then we move the path to halfway between the old *x* and new *x* (this is so it is trailing a bit behind the user's finger/cursor). We use ```.quadTo()``` to create smooth curves instead of rigid lines. Next, we update our ```currentX``` and ```currentY```, and then we draw this path to the canvas. Finally, we call ```invalidate()```, which forces the view to redraw with the updates.
+
+Now we've successfully created a canvas that draws as the user wills.
+
+## Run Inference
+
+Before we run the inference, we need to retrieve the bitmap and convert it into a form our model will understand (normalize between 0 and 1). First, we instantiate a method in ```CanvasView.kt``` to transfer the bitmap, namely
+```kotlin
+public fun getBitmap(): Bitmap {
+    return extraBitmap
+}
+```
+We call this in ```MainActivity.kt``` by calling the ```getBitmap()``` method of ```canvasView``` (the id of our custom view in our layout. Using a kotlin-android extension, we can simply call the id, and avoid calling ```findViewById```).
+```kotlin
+inputBitmap = canvasView.getBitmap()
+```
+Next, we need to scale this bitmap down to a ```28x28``` image.
+```kotlin
+inputBitmap = Bitmap.createScaledBitmap(inputBitmap, 28, 28, true)
 ```

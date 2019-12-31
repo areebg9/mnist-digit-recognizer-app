@@ -52,7 +52,7 @@ val localModel = FirebaseCustomLocalModel.Builder()
     .setAssetFilePath("mnistOfficial.tflite")
     .build()
 ```
-This created a model, loading it from the specified file path.
+This creates a model, loading it from the specified file path.
 
 #### Define the Options of the Model
 The options of a model are determined for us - all we have to do is pass in our model.
@@ -61,14 +61,14 @@ val options = FirebaseModelInterpreterOptions.Builder(localModel).build()
 ```
 
 #### Define the Interpreter
-The *interpreter*, as mentioned before, is the interface with which we interact with our model. All we have to do are pass in the options.
+The *interpreter*, as mentioned before, is the interface with which we interact with our model. All we have to do is pass in the options.
 ```kotlin
 val interpreter = FirebaseModelInterpreter.getInstance(options)!!
 ```
 The ```!!``` operator is a way (in Kotlin) to make sure that a variable is not null (with the Firebase interface, it's required that ```interpreter``` be non-null).
 
 #### Define the Inputs and Outputs
-Now we need to define the ```InputOutputOptions``` - all we need to do is define the shape of our input and output. As shown in the Colab Notebook, the input dimensionality of an image is ```28x28x1``` (or at least, that's how it is for this particular model. If ```x_train``` and ```x_test``` were reshaped differently, to, let's say, ```28x28```, those would be the input dimensions). The output is ```1x10```, representing the probability of the digit for each class.
+Now we need to define the ```InputOutputOptions``` - we need to define the shape of our input and output. As shown in the Colab Notebook, the input dimensionality of an image is ```28x28x1``` (or at least, that's how it is for this particular model. If ```x_train``` and ```x_test``` were reshaped differently, to, let's say, ```28x28```, those would be the input dimensions). The output is ```1x10```, representing the probability of the digit for each class.
 ```kotlin
 val inputOutputOptions = FirebaseModelInputOutputOptions.Builder()
     .setInputFormat(0, FirebaseModelDataType.FLOAT32, intArrayOf(1, 28, 28, 1))
@@ -129,7 +129,7 @@ override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: In
     extraCanvas.drawColor(backgroundColor)
 }
 ```
-First, we override the function and call ```super.onSizeChanged()``` (the default behavior). Then, we go on to create our bitmap given the width and height (```Bitmap.Config.ARGB_8888``` is the [recommended option](https://developer.android.com/reference/android/graphics/Bitmap.Config#ARGB_8888) for this parameter, as each pixel is stored on 4 bytes). We create the canvas with this bitmap, and also initialize its color to be the background color we defined in the class. The line ```if (::extraBitmap.isInitialized) extraBitmap.recycle()``` recycles any extra bitmaps left over - the reason for this is that incase we decide to change, it does not take up unwanted memory.
+First, we override the function and call ```super.onSizeChanged()``` (the default behavior). Then, we go on to create our bitmap given the width and height (```Bitmap.Config.ARGB_8888``` is the [recommended option](https://developer.android.com/reference/android/graphics/Bitmap.Config#ARGB_8888) for this parameter, as each pixel is stored on 4 bytes). We create the canvas with this bitmap, and also initialize its color to be the background color we defined in the class. The line ```if (::extraBitmap.isInitialized) extraBitmap.recycle()``` recycles any extra bitmaps left over - the reason for this is that in case we decide to change, it does not take up unwanted memory.
 
 Next, we override the ```onDraw``` function.
 
@@ -157,7 +157,7 @@ override fun onTouchEvent(event: MotionEvent): Boolean {
     return true
 }
 ```
-This code first retrieves the ```x``` and ```y``` coordinates of the user's touch. Then, depending on whether the user puts down their finger/cursor (```ACTION_DOWN```), moved their finger/cursor (```ACTION_MOVE```), or taken up their finger/cursor (```ACTION_UP```), a different function (which we will proceed to define) will be called.
+This code first retrieves the ```x``` and ```y``` coordinates of the user's touch. Then, depending on whether the user put down their finger/cursor (```ACTION_DOWN```), moved their finger/cursor (```ACTION_MOVE```), or taken up their finger/cursor (```ACTION_UP```), a different function (which we will proceed to define) will be called.
 
 The ```touchStart()``` function should start drawing, the ```touchUp()``` function should stop drawing, and the ```touchMove()``` function should continue drawing and change it to respond with the user's touch. Let's first define ```touchUp()``` and ```touchStart()```, as those are the easier 2 of the functions.
 
@@ -253,7 +253,7 @@ interpreter.run(inputs, inputOutputOptions)
 ```
 And as such, the app will be able to predict the digit of the user's input.
 ## Adding a Clear Functionality
-This app would not be a viable option if the user could only predict their drawing once - therefore, we must add a *Clear* functionality. Withing our custom view, we will define a method that does this. 
+This app would not be a viable option if the user could only predict their drawing once - therefore, we must add a *Clear* functionality. Within our custom view, we will define a method that does this. 
 ```kotlin
 public fun clear(): Void? {
     extraCanvas.drawColor(backgroundColor)

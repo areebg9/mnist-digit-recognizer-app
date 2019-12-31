@@ -230,4 +230,4 @@ for (x in 0..27){
     }
 }
 ```
-We have our input ready - let's build it to input into the model (step 5 of the [Creating Model section]()).
+We have our input ready - let's build it to input into the model (step 5 of the [Creating Model section](https://github.com/Qwerty71/mnist-digit-recognizer/blob/master/EXPLAINED_CODE.md#create-the-model)).

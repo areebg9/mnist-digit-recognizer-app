@@ -231,3 +231,23 @@ for (x in 0..27){
 }
 ```
 We have our input ready - let's build it to input into the model (step 5 of the [Creating Model section](https://github.com/Qwerty71/mnist-digit-recognizer/blob/master/EXPLAINED_CODE.md#create-the-model)).
+```kotlin
+var inputs = FirebaseModelInputs.Builder()
+    .add(input)
+    .build()
+```
+Now we can run our inference. We will run our prediction on our ```inputs``` variable and add success and failure listeners. If the inference succeeds, we will get the index of the highest probability (credit to [this link](https://stackoverflow.com/questions/20762219/indexof-in-kotlin-arrays) for the method) and set it as the value of our ```textView``` (the id of the ```TextView``` in our layout). To keep track, we will use ```Log```s to log whether our prediction was successful or an error ocurred (```Log```s are the Android equivalent of printing to the console). If the inference fails, we will log the error to ```LogCat```.
+
+```kotlin
+interpreter.run(inputs, inputOutputOptions)
+    .addOnSuccessListener {result ->
+        Log.i(TAG, "Prediction has been made")
+        var output = result.getOutput<Array<FloatArray>>(0)
+        var probabilities = output[0]
+        var maxIdx = probabilities.indices.maxBy { probabilities[it] } ?: -1
+        textView.text = (ma xIdx).toString()
+    }
+    .addOnFailureListener({e ->
+        Log.e(TAG, "exception", e)
+    })
+```

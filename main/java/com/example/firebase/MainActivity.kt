@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.ml.custom.*
 import kotlinx.android.synthetic.main.activity_main.*
 
+// Created by Qwerty71
+
 class MainActivity : AppCompatActivity() {
 
     val TAG = "MainActivity"

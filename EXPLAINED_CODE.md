@@ -4,7 +4,7 @@ This document will help explain all the code within this repository. This reposi
 
 # Workflow
 
-This project uses Firebase's MLKit as an interface to use with Tensorflow Lite to make a prediction on a user-drawn MNIST digit. 
+This project uses Firebase's MLKit as an interface to use with Tensorflow Lite to make a prediction on a user-drawn MNIST digit.  The MNIST model is a machine learning model that takes as input a handwritten-image of a digit, and outputs which digit the model believes it is.
 
 The layout of the app is as follows - there is a canvas for the user to draw a digit, and two buttons beneath, labeled *Classify* and *Clear*. The *Clear* button clears the canvas, and the *Classify* button uses the Tensorflow Lite model to make a prediction on what digit the user has drawn - the output with highest probability is displayed beneath the canvas. 
 
@@ -29,7 +29,11 @@ Next, we need to create a Firebase project and link it with our app. The app sho
 
 Now we can get into coding in ```MainActivity.kt```. All the code here can be found at [the official tutorial](https://firebase.google.com/docs/ml-kit/android/use-custom-models), but it will be explained here as well.
 
+First, upload the model (in ```.tflite``` format) to the *Assets* folder in Android Studio (you may need to click *Main -> New -> Folder -> Assets Folder* to create it first)
+
 Once the internet permissions and "no compress tflite" options are added (as documented in the tutorial), we can get on with loading the model. With MLKit, there are 2 options when it comes to loading a model - one can either upload the model to Firebase, or upload the model directly to the project directory. In this application, the model is directly uploaded as to avoid more obfuscated code.
+
+The code presented in this section will reside in ```infer()```, the ```onClick``` method for the *Classify* button.
 
 The process of using a model and its respective settings is
 1. Create a model (```FirebaseCustomLocalModel```)
@@ -64,10 +68,14 @@ val interpreter = FirebaseModelInterpreter.getInstance(options)!!
 The ```!!``` operator is a way (in Kotlin) to make sure than a variable is not null (with the Firebase interface, it's required that ```interpreter``` be non-null).
 
 #### Define the Inputs and Outputs
-Now we need to 
+Now we need to define the ```InputOutputOptions``` - all we need to do is define the shape of our input and output. As shown in the Colab Notebook, the input dimensionality of an image is ```28x28x1``` (or at least, that's how it is for this particular model. If ```x_train``` and ```x_test``` were reshaped differently, to, let's say, ```28x28```, those would be the input dimensions). The output is ```1x10```, representing the probability of the digit for each class.
 ```kotlin
 val inputOutputOptions = FirebaseModelInputOutputOptions.Builder()
     .setInputFormat(0, FirebaseModelDataType.FLOAT32, intArrayOf(1, 28, 28, 1))
     .setOutputFormat(0, FirebaseModelDataType.FLOAT32, intArrayOf(1, 10))
     .build()
 ```
+
+## Create the Canvas (Custom View)
+
+Now we will create the canvas. Almost all the code can be found in [this tutorial](https://codelabs.developers.google.com/codelabs/advanced-android-kotlin-training-canvas) about canvases, and [this tutorial](https://codelabs.developers.google.com/codelabs/advanced-andoid-kotlin-training-custom-views) about custom views (as part of the Advanced Android Development in Kotlin Course).

@@ -130,3 +130,33 @@ override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: In
 }
 ```
 First, we override the function and call ```super.onSizeChanged()``` (the default behavior). Then, we go on to create our bitmap given the width and height (```Bitmap.Config.ARGB_8888``` is the [recommended option](https://developer.android.com/reference/android/graphics/Bitmap.Config#ARGB_8888) for this parameter, as each pixel is stored on 4 bytes). We create the canvas with this bitmap, and also initialize its color to be the background color we defined in the class. The line ```if (::extraBitmap.isInitialized) extraBitmap.recycle()``` recycles any extra bitmaps left over - the reason for this is that incase we decide to change, it does not take up unwanted memory.
+
+Next, we override the ```onDraw``` function.
+
+```kotlin
+override fun onDraw(canvas: Canvas) {
+    super.onDraw(canvas)
+    canvas.drawBitmap(extraBitmap, 0f, 0f, null)
+}
+```
+This simply calls ```super.onDraw()``` (the default behavior), and also draws the bitmap onto the canvas.
+
+Now we can handle user interaction. We start by overriding ```onTouchEvent```.
+
+```kotlin
+override fun onTouchEvent(event: MotionEvent): Boolean {
+    newX = event.x
+    newY = event.y
+
+    when (event.action) {
+        MotionEvent.ACTION_DOWN -> touchStart()
+        MotionEvent.ACTION_MOVE -> touchMove()
+        MotionEvent.ACTION_UP -> touchUp()
+    }
+
+    return true
+}
+```
+This code first retrieves the ```x``` and ```y``` coordinates of the user's touch. Then, depending on whether the user put down their finger/cursor (```ACTION_DOWN```), moved their finger/cursor (```ACTION_MOVE```), or taken up their finger/cursor (```ACTION_UP```), a different function (which we will proceed to define) will be called.
+
+The ```touchStart()``` function should start drawing, the ```touchUp()``` function should stop drawing, and the ```touchMove()``` function should continue drawing and change it to respond with the user's touch. Let's first define ```touchUp()``` and ```touchStart()```, as those are the easier 2 of the functions.

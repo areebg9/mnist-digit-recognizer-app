@@ -1,6 +1,7 @@
 package com.example.firebase
 
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -32,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         for (x in 0..27){
             for (y in 0..27){
                 val pixel = inputBitmap.getPixel(x, y)
-                input[0][y][x][0] = (0xff - (pixel and 0xff)).toFloat()
+                input[0][y][x][0] = 1f - ((Color.red(pixel) + Color.green(pixel) + Color.blue(pixel)).toFloat() / 3f / 255f)
             }
         }
 

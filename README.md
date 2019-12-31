@@ -27,7 +27,7 @@ A link to a Colab Notebook which contains the training and conversion process ca
 
 ## Register Our App with Firebase
 
-Next, we need to create a Firebase project and link it with our app. The app shown here was created in Android Studio using Kotlin as the primary language. Once the app has been created, simply link the app to the Firebase Project, as shown [here](https://firebase.google.com/docs/android/setup). Remember to add the config ```json``` file (it is not contained in this repo, as it sits in a higher directory).
+Next, we need to create a Firebase project and link it with our app. The app shown here was created in Android Studio using Kotlin as the primary language. Once the app has been created, simply link the app to the Firebase Project, as shown [here](https://firebase.google.com/docs/android/setup). Remember to add the config ```json``` file (it is not contained in this repo, as it sits in a higher directory and contains private information).
 
 ## Load the Model and Respective Settings
 

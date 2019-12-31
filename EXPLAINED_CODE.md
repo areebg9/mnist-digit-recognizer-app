@@ -251,3 +251,24 @@ interpreter.run(inputs, inputOutputOptions)
         Log.e(TAG, "exception", e)
     })
 ```
+And as such, the app will be able to predict the digit of the user's input.
+## Adding a Clear Functionality
+This app would not be a viable option of the user could only predict their drawing once - therefore, we must add a *Clear* functionality. Withing our custom view, we will define a method that does this. 
+```kotlin
+public fun clear(): Void? {
+    extraCanvas.drawColor(backgroundColor)
+    return null
+}
+```
+Now we can call this method from ```MainActivity.kt```.
+```kotlin
+public fun clear(view: View): Void?{
+    canvasView.clear()
+    return null
+}
+```
+where ```canvasView``` is the id of our custom view in the layout. Recall that an onClick method must be public, must take a ```view``` as input, and return nothing.
+
+## Conclusion
+
+This are the basics of how to code an MNIST digit-recognizer Android app in Kotlin using Firebase's MLKit.

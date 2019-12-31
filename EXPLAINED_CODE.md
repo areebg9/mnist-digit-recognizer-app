@@ -1,23 +1,23 @@
 # Overview
 
-This document will help explain all the code within this repository. This repository contains all files within *.../app/src/main* inside of an Android project - the gradle files and files in higher directories have been omitted.
+This document will help explain all the code within this repository. This repository contains all files within *.../app/src/main* inside of an Android project - the Gradle files and files in higher directories have been omitted.
 
 # Workflow
 
-This project uses Firebase's MLKit as an interface to use with Tensorflow Lite to make a prediction on a user-drawn MNIST digit.  The MNIST model is a machine learning model that takes as input a handwritten-image of a digit, and outputs which digit the model believes it is.
+This project uses Firebase's MLKit as an interface to use with TensorFlow Lite to predict a user-drawn MNIST digit.  The MNIST model is a machine learning model that takes as input a handwritten-image of a digit, and outputs which digit the model believes it is.
 
-The layout of the app is as follows - there is a canvas for the user to draw a digit, and two buttons beneath, labeled *Classify* and *Clear*. The *Clear* button clears the canvas, and the *Classify* button uses the Tensorflow Lite model to make a prediction on what digit the user has drawn - the output with highest probability is displayed beneath the canvas. 
+The layout of the app is as follows - there is a canvas for the user to draw a digit, and two buttons beneath, labeled *Classify* and *Clear*. The *Clear* button clears the canvas, and the *Classify* button uses the Tensorflow Lite model to make a prediction on what digit the user has drawn - the output with the highest probability is displayed beneath the canvas. 
 
 The steps of production are:
 1. Create the model
 2. Register our App with Firebase
 3. Load the Model and respective settings
 4. Create a Custom View for the user's Canvas
-5. Take user's drawing as input to model, display output
+5. Take the user's drawing as input to the model, display output
 
 ## Create the Model
 
-To use a model with Tensorflow Lite and Firebase's MLKit, we need to change our model into a ```.tflite``` format so it can be interpreted by the *interpreter* (an *interpreter* is the interface with which a model is controlled in the app).
+To use a model with TensorFlow Lite and Firebase's MLKit, we need to change our model into a ```.tflite``` format so it can be interpreted by the *interpreter* (an *interpreter* is the interface with which a model is controlled in the app).
 
 A link to a Colab Notebook which contains the training and conversion process can be found [here](https://colab.research.google.com/drive/1hHEfP4nm0vuZL0ae3qRY4wRE5729cpAt).
 
@@ -31,7 +31,7 @@ Now we can get into coding in ```MainActivity.kt```. All the code here can be fo
 
 First, upload the model (in ```.tflite``` format) to the *Assets* folder in Android Studio (you may need to click *Main -> New -> Folder -> Assets Folder* to create it first)
 
-Once the internet permissions and "no compress tflite" options are added (as documented in the tutorial), we can get on with loading the model. With MLKit, there are 2 options when it comes to loading a model - one can either upload the model to Firebase, or upload the model directly to the project directory. In this application, the model is directly uploaded as to avoid more obfuscated code.
+Once the internet permissions and "no compress tflite" options are added (as documented in the tutorial), we can get on with loading the model. With MLKit, there are 2 options when it comes to loading a model - one can either upload the model to Firebase or upload the model directly to the project directory. In this application, the model is directly uploaded as to avoid more obfuscated code.
 
 The code presented in this section will reside in ```infer()```, the ```onClick``` method for the *Classify* button.
 
@@ -65,7 +65,7 @@ The *interpreter*, as mentioned before, is the interface with which we interact 
 ```kotlin
 val interpreter = FirebaseModelInterpreter.getInstance(options)!!
 ```
-The ```!!``` operator is a way (in Kotlin) to make sure than a variable is not null (with the Firebase interface, it's required that ```interpreter``` be non-null).
+The ```!!``` operator is a way (in Kotlin) to make sure that a variable is not null (with the Firebase interface, it's required that ```interpreter``` be non-null).
 
 #### Define the Inputs and Outputs
 Now we need to define the ```InputOutputOptions``` - all we need to do is define the shape of our input and output. As shown in the Colab Notebook, the input dimensionality of an image is ```28x28x1``` (or at least, that's how it is for this particular model. If ```x_train``` and ```x_test``` were reshaped differently, to, let's say, ```28x28```, those would be the input dimensions). The output is ```1x10```, representing the probability of the digit for each class.
@@ -90,7 +90,7 @@ class CanvasView @JvmOverloads constructor(
 ```
 This notation allows us to embed this view within our ```activity_main.xml``` while also giving us the ability to call an object to its class. 
 
-For the sake of brevity, the initializations at the class-level will be skipped (they can still be viewed in [here](main/java/com/example/firebase/CanvasView.kt)) - keep in mind, however, that ```private lateinit var variable: Type``` initializes an empty variable ```variable``` of type ```Type```, to be initialized at a later time.
+For the sake of brevity, the initializations at the class-level will be skipped (they can still be viewed [here](main/java/com/example/firebase/CanvasView.kt)) - keep in mind, however, that ```private lateinit var variable: Type``` initializes an empty variable ```variable``` of type ```Type```, to be initialized at a later time.
 
 We'll start by defining our colors. In ```colors.xml``` (found in */res/values*), we have defined a background and foreground color for our canvas. Now let's load them into our code.
 ```kotlin
@@ -157,7 +157,7 @@ override fun onTouchEvent(event: MotionEvent): Boolean {
     return true
 }
 ```
-This code first retrieves the ```x``` and ```y``` coordinates of the user's touch. Then, depending on whether the user put down their finger/cursor (```ACTION_DOWN```), moved their finger/cursor (```ACTION_MOVE```), or taken up their finger/cursor (```ACTION_UP```), a different function (which we will proceed to define) will be called.
+This code first retrieves the ```x``` and ```y``` coordinates of the user's touch. Then, depending on whether the user puts down their finger/cursor (```ACTION_DOWN```), moved their finger/cursor (```ACTION_MOVE```), or taken up their finger/cursor (```ACTION_UP```), a different function (which we will proceed to define) will be called.
 
 The ```touchStart()``` function should start drawing, the ```touchUp()``` function should stop drawing, and the ```touchMove()``` function should continue drawing and change it to respond with the user's touch. Let's first define ```touchUp()``` and ```touchStart()```, as those are the easier 2 of the functions.
 
@@ -236,7 +236,7 @@ var inputs = FirebaseModelInputs.Builder()
     .add(input)
     .build()
 ```
-Now we can run our inference. We will run our prediction on our ```inputs``` variable and add success and failure listeners. If the inference succeeds, we will get the index of the highest probability (credit to [this link](https://stackoverflow.com/questions/20762219/indexof-in-kotlin-arrays) for the method) and set it as the value of our ```textView``` (the id of the ```TextView``` in our layout). To keep track, we will use ```Log```s to log whether our prediction was successful or an error ocurred (```Log```s are the Android equivalent of printing to the console). If the inference fails, we will log the error to ```LogCat```.
+Now we can run our inference. We will run our prediction on our ```inputs``` variable and add success and failure listeners. If the inference succeeds, we will get the index of the highest probability (credit to [this link](https://stackoverflow.com/questions/20762219/indexof-in-kotlin-arrays) for the method) and set it as the value of our ```textView``` (the id of the ```TextView``` in our layout). To keep track, we will use ```Log```s to log whether our prediction was successful or an error occurred (```Log```s are the Android equivalent of printing to the console). If the inference fails, we will log the error to ```LogCat```.
 
 ```kotlin
 interpreter.run(inputs, inputOutputOptions)
@@ -253,7 +253,7 @@ interpreter.run(inputs, inputOutputOptions)
 ```
 And as such, the app will be able to predict the digit of the user's input.
 ## Adding a Clear Functionality
-This app would not be a viable option of the user could only predict their drawing once - therefore, we must add a *Clear* functionality. Withing our custom view, we will define a method that does this. 
+This app would not be a viable option if the user could only predict their drawing once - therefore, we must add a *Clear* functionality. Withing our custom view, we will define a method that does this. 
 ```kotlin
 public fun clear(): Void? {
     extraCanvas.drawColor(backgroundColor)
@@ -271,4 +271,4 @@ where ```canvasView``` is the id of our custom view in the layout. Recall that a
 
 ## Conclusion
 
-This are the basics of how to code an MNIST digit-recognizer Android app in Kotlin using Firebase's MLKit.
+These are the basics of how to code an MNIST digit-recognizer Android app in Kotlin using Firebase's MLKit.

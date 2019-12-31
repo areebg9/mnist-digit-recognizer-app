@@ -9,6 +9,8 @@ import android.view.ViewConfiguration
 import android.widget.Button
 import androidx.core.content.res.ResourcesCompat
 
+// Created by Qwerty71
+
 private const val STROKE_WIDTH = 60f
 
 class CanvasView @JvmOverloads constructor(

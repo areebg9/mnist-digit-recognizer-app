@@ -2,7 +2,7 @@
 
 This document will help explain all the code within this repository. This repository contains all files within *.../app/src/main* inside of an Android project - the Gradle files and files in higher directories have been omitted.
 
-# Workflow
+# Overview
 
 This project uses Firebase's MLKit as an interface to use with TensorFlow Lite to predict a user-drawn MNIST digit.  The MNIST model is a machine learning model that takes as input a handwritten-image of a digit, and outputs which digit the model believes it is.
 

@@ -115,4 +115,4 @@ private val paint = Paint().apply{
 ```
 We have initialized it with the color, anti-aliasing, dithering (a technique to create the illusion of a certain color), the stroke, and a pre-defined stroke width (set at 60f). 
 
-
+Now let's get into creating our canvas. To create the canvas, we will overlay it with a bitmap - this also allows us to retrieve the pixel values from the bitmap for training in our model.
